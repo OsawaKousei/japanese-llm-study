@@ -1,9 +1,9 @@
 // Change the name and workspaceFolder, service to your project name
 {
-    "name": "docker_python_ml_template",
+    "name": "japanese-llm-study",
     "dockerComposeFile": "./docker-compose.yaml",
-    "workspaceFolder": "${localEnv:HOME}/docker_python_ml_template",
-    "service": "docker_python_ml_template",
+    "workspaceFolder": "${localEnv:HOME}/japanese-llm-study",
+    "service": "japanese-llm-study",
     "customizations": {
         "vscode": {
             "extensions": [

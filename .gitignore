@@ -1,0 +1,18 @@
+# cahce
+*.pyc
+mypy_cache/
+
+# model
+*.pt
+*.pth
+*.safetensors
+
+# data
+*.txt
+*.json
+*.bin
+*.env
+*.arrow
+
+
+llm_book/

@@ -1,14 +1,14 @@
 # Change the service name and container name, hostname to your project name
 # Change the volumes to your project path
 services:
-  docker_python_ml_template:
-    container_name: docker_python_ml_template
+  japanese-llm-study:
+    container_name: japanese-llm-study
     build:
       context: .
       args:
         - USER_NAME=${USER_NAME}
       dockerfile: dockerfile
-    image: n622jwith/docker_python_ml_template:latest
+    image: n622jwith/japanese-llm-study:latest
     environment:
       - DISPLAY=${DISPLAY}
       - "QT_X11_NO_MITSHM=1"
@@ -19,8 +19,8 @@ services:
       # ssh key
       - $HOME/.ssh:/home/${USER_NAME}/.ssh:ro
       # workspace
-      - $HOME/ML/docker_python_ml_template/:/home/${USER_NAME}/docker_python_ml_template
-    hostname: docker_python_ml_template
+      - $HOME/ML/japanese-llm-study/:/home/${USER_NAME}/japanese-llm-study
+    hostname: japanese-llm-study
     deploy:
       resources:
         reservations:
