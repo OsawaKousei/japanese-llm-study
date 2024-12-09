@@ -20,6 +20,7 @@ services:
       - $HOME/.ssh:/home/${USER_NAME}/.ssh:ro
       # workspace
       - $HOME/ML/japanese-llm-study/:/home/${USER_NAME}/japanese-llm-study
+      - $HOME/ML/dataset/:/home/${USER_NAME}/dataset
     hostname: japanese-llm-study
     deploy:
       resources:
