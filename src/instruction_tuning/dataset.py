@@ -30,18 +30,18 @@ tokenizer.chat_template = """\
 {% endfor %}\
 """
 
-chat_text = tokenizer.apply_chat_template(dataset[0]["conversation"], tokenize=False)
-
 if __name__ == "__main__":
+    chat_text = tokenizer.apply_chat_template(
+        dataset[0]["conversation"], tokenize=False
+    )
     print(chat_text.replace(tokenizer.eos_token, "\n"))
 
 tokenized_dataset = [
     tokenizer.apply_chat_template(item["conversation"]) for item in dataset
 ]
 
-token_ids = tokenized_dataset[0]
-
 if __name__ == "__main__":
+    token_ids = tokenized_dataset[0]
     print("token_ids:", token_ids)
     print("tokens:", tokenizer.convert_ids_to_tokens(token_ids))
 
@@ -54,27 +54,25 @@ collator = DataCollatorForCompletionOnlyLM(
     tokenizer=tokenizer,
 )
 
-batch = collator(tokenized_dataset[:1])
-input_ids = batch["input_ids"][0]
-labels = batch["labels"][0]
-
 if __name__ == "__main__":
+    batch = collator(tokenized_dataset[:1])
+    input_ids = batch["input_ids"][0]
+    labels = batch["labels"][0]
+
     print("入力トークン:", input_ids)
     print("正解ラベル:", labels)
 
-segments_to_fit: list[list[int]] = []
-segments_to_ignore: list[list[int]] = []
+    segments_to_fit: list[list[int]] = []
+    segments_to_ignore: list[list[int]] = []
 
-for key, group in itertools.groupby(
-    range(len(input_ids)), key=lambda i: labels[i] == -100
-):
-    group_list = list(group)
-    if key:
-        segments_to_ignore.append(group_list)
-    else:
-        segments_to_fit.append(group_list)
-
-    if __name__ == "__main__":
+    for key, group in itertools.groupby(
+        range(len(input_ids)), key=lambda i: labels[i] == -100
+    ):
+        group_list = list(group)
+        if key:
+            segments_to_ignore.append(group_list)
+        else:
+            segments_to_fit.append(group_list)
 
         print("----損失を計算しない部分----")
         for seg in segments_to_ignore:

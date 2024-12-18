@@ -14,5 +14,8 @@ mypy_cache/
 *.env
 *.arrow
 
-
+# reference
 llm_book/
+
+# result
+IT_results/

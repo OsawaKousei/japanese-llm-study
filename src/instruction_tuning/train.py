@@ -1,11 +1,39 @@
 import torch
-from dataset import base_model_name, collator, tokenized_dataset, tokenizer
+from datasets import load_dataset
 from peft import LoraConfig, TaskType, get_peft_model
 from transformers import (
     AutoModelForCausalLM,
+    AutoTokenizer,
     BitsAndBytesConfig,
     Trainer,
     TrainingArguments,
+)
+from trl import DataCollatorForCompletionOnlyLM
+
+dataset = load_dataset("llm-book/oasst1-21k-ja", split="train")
+base_model_name = "tokyotech-llm/Swallow-7b-hf"
+tokenizer = AutoTokenizer.from_pretrained(base_model_name)
+tokenizer.chat_template = """\
+{%- for message in messages %}
+{%- if message['role'] == 'user' %}
+{{ bos_token + 'ユーザ：' + message['content'] + eos_token }}
+{%- elif message['role'] == 'assistant' %}
+{{ bos_token + 'アシスタント：'  + message['content'] + eos_token }}
+{%- endif %}
+{% if loop.last and add_generation_prompt %}
+{{ bos_token + 'アシスタント：' }}
+{%- endif %}
+{% endfor %}\
+"""
+tokenized_dataset = [
+    tokenizer.apply_chat_template(item["conversation"]) for item in dataset
+]
+tokenizer.pad_token = tokenizer.unk_token
+bos = tokenizer.bos_token
+collator = DataCollatorForCompletionOnlyLM(
+    instruction_template=bos + "ユーザ：",
+    response_template=bos + "アシスタント：",
+    tokenizer=tokenizer,
 )
 
 quantization_config = BitsAndBytesConfig(
@@ -47,7 +75,7 @@ training_args = TrainingArguments(
     bf16=True,
     num_train_epochs=1,
     per_device_train_batch_size=1,
-    gradient_accumulation_steps=8,
+    gradient_accumulation_steps=4,
     gradient_checkpointing=True,
     optim="paged_adamw_8bit",
     learning_rate=3e-4,
@@ -56,6 +84,7 @@ training_args = TrainingArguments(
     warmup_ratio=0.1,
     logging_steps=10,
     save_steps=300,
+    report_to="none",
 )
 
 trainer = Trainer(
