@@ -21,6 +21,7 @@ services:
       # workspace
       - $HOME/ML/japanese-llm-study/:/home/${USER_NAME}/japanese-llm-study
     hostname: japanese-llm-study
+    shm_size: '2gb'
     deploy:
       resources:
         reservations:
