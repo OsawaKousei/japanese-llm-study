@@ -18,5 +18,4 @@ mypy_cache/
 llm_book/
 
 # result
-IT_results/
-result/
+*result*/
