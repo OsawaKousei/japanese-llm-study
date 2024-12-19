@@ -44,6 +44,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     make \
     build-essential \
+    python3-dev \
     libssl-dev \
     zlib1g-dev \
     libbz2-dev \
